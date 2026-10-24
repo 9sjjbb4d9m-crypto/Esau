@@ -11,12 +11,12 @@ try{
  await page.getByRole('button',{name:'Start today’s review'}).click();
  await page.getByRole('button',{name:'Reveal translation'}).click();
  await page.getByRole('button',{name:'Good',exact:false}).click();
- let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('parlons-v1')));assert.equal(state.cards['1'].reps,1);assert.equal(state.events.length,1);
+ let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('zoalmon-v1')));assert.equal(state.cards['1'].reps,1);assert.equal(state.events.length,1);
  await page.reload();assert.ok(!(await page.locator('.word').textContent()).includes('bonjour'));
  await page.locator('nav [data-page="quiz"]').click();
  for(let i=0;i<5;i++){await page.locator('[data-answer="0"]').click();if(i===0){await page.locator('nav [data-page="home"]').click();await page.locator('nav [data-page="quiz"]').click();await page.locator('.feedback').waitFor();}await page.locator('[data-action="next-quiz"]').click();}
  await page.getByText('QUIZ COMPLETE',{exact:true}).waitFor();
- state=await page.evaluate(()=>JSON.parse(localStorage.getItem('parlons-v1')));assert.equal(state.events.filter(e=>e.type==='quiz').length,5);
+ state=await page.evaluate(()=>JSON.parse(localStorage.getItem('zoalmon-v1')));assert.equal(state.events.filter(e=>e.type==='quiz').length,5);
  await page.locator('nav [data-page="exercises"]').click();await page.locator('[data-action="builtin"]').click();await page.locator('[data-ex-answer="0"]').click();await page.locator('.feedback').waitFor();await page.locator('nav [data-page="home"]').click();await page.locator('nav [data-page="exercises"]').click();await page.locator('.feedback').waitFor();
  await page.locator('nav [data-page="progress"]').click();assert.equal(await page.locator('.word-row').count(),24);
  await page.locator('[data-page="settings"]').click();await page.locator('#goal').selectOption('20');await page.reload();assert.equal(await page.locator('#goal').inputValue(),'20');

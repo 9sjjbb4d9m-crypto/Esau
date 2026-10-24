@@ -1,4 +1,4 @@
-# Parlons
+# zoalmon
 
 A working, local French-learning MVP. Vanilla HTML/CSS/JavaScript and a dependency-free Node.js server. Requires Node.js 20 or later. No build step, account, database, or API key required for the core app.
 

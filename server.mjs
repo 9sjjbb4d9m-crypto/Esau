@@ -24,4 +24,4 @@ export function createServer({apiKey=process.env.OPENAI_API_KEY,fetcher=fetch}={
  const file=await readFile(path);res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript'})[extname(path)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:file);
  }catch(e){send(e.code==='ENOENT'?404:502,{error:e.code==='ENOENT'?'Not found.':'Request failed. Please try again.'});}
 });}
-if(process.argv[1]===fileURLToPath(import.meta.url)){const port=Number(process.env.PORT)||3000;createServer().listen(port,'127.0.0.1',()=>console.log(`Parlons is ready at http://localhost:${port}`));}
+if(process.argv[1]===fileURLToPath(import.meta.url)){const port=Number(process.env.PORT)||3000;createServer().listen(port,'127.0.0.1',()=>console.log(`zoalmon is ready at http://localhost:${port}`));}
