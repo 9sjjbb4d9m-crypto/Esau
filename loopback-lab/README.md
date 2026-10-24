@@ -19,7 +19,7 @@ This branch supports a **remote GitHub Codespace** as an explicit alternative to
 
 You can also use **Tasks: Run Task → Start Loopback Lab in Codespaces**. The **Test Loopback Lab** task runs the suite. Codespaces may consume your GitHub compute/storage quota.
 
-`--codespaces` requires GitHub's `CODESPACES=true` and `CODESPACE_NAME` environment values. It permits only the exact `https://<codespace-name>-<port>.app.github.dev` origin in addition to loopback origins. The listener remains on `127.0.0.1`; proxy headers are not trusted. The ordinary `python -m lab` command keeps the original local-only behavior. Hostname checks are not authentication: the forwarded port must remain Private so GitHub controls access. No application account system is added.
+`--codespaces` requires GitHub's `CODESPACES=true` and `CODESPACE_NAME` environment values. It permits only the exact `https://<codespace-name>-<port>.app.github.dev` origin in addition to loopback origins. The listener remains on `127.0.0.1`; proxy headers are not trusted. The ordinary `python -m lab` command keeps the original local-only behavior. Hostname checks are not authentication: the forwarded port must remain Private so GitHub controls access. No application account system is added. Browser API calls include same-origin cookies so GitHub’s private-preview authentication works; the lab itself never creates or stores cookies.
 
 The `.devcontainer` configuration is at the repository root. The lab lives under `loopback-lab/`; the existing French-learning application is preserved on this branch.
 

@@ -15,3 +15,5 @@ The optional browser test starts and stops its own loopback server. No public de
 The current Starlette test client emits an upstream deprecation notice for its supported httpx compatibility layer. It does not affect the passing tests or runtime application.
 
 Codespaces preparation: five additional tests verify explicit opt-in, exact preview-origin matching, host rewriting, and rejection of other origins and non-loopback peers. A live Codespace has not been created or tested from this environment; the available GitHub integration cannot create Codespaces.
+
+The browser suite also passes a simulated private-preview authentication gate: API requests retain a same-origin HttpOnly session cookie, while the application itself creates none. This simulates forwarding authentication; it is not a live GitHub Codespaces test.

@@ -120,6 +120,20 @@ def main():
             expect(page.get_by_role("heading", name="Four experiments. A stronger foundation.")).to_be_visible()
             assert page.evaluate("localStorage.length + sessionStorage.length") == 0
             assert context.cookies() == []
+            # Private Codespaces forwarding authenticates same-origin requests with
+            # its own cookie. Simulate that gate; the lab itself sets no cookies.
+            context.add_cookies([{"name":"preview-test-auth", "value":"test-session", "url":url, "httpOnly":True, "sameSite":"Lax"}])
+            def private_preview_gate(route):
+                if "preview-test-auth=test-session" not in route.request.all_headers().get("cookie", ""):
+                    route.fulfill(status=403, content_type="application/json", body='{"detail":"Preview authentication required"}')
+                else:
+                    route.continue_()
+            context.route("**/api/**", private_preview_gate)
+            page.goto(url + "/#url")
+            page.reload()
+            expect(page.get_by_role("heading", name="No flagged structural clues", exact=True)).to_be_visible()
+            context.unroute("**/api/**", private_preview_gate)
+            context.clear_cookies()
             # At mobile sizes, all workspaces remain reachable and fit the viewport.
             page.set_viewport_size({"width":390,"height":844})
             for workspace in ("url", "hash", "encryption", "traffic", "guide"):

@@ -30,7 +30,7 @@ function toast(message) {
 async function api(path, body) {
   const response = await fetch(`/api/${path}`, {
     method:"POST", headers:{"Content-Type":"application/json", "X-Lab-Request":"1"},
-    body:JSON.stringify(body), credentials:"omit", cache:"no-store", redirect:"error"
+    body:JSON.stringify(body), credentials:"same-origin", cache:"no-store", redirect:"error"
   });
   let data;
   try { data = await response.json(); } catch { throw new Error("The local server returned an unexpected response."); }
@@ -239,7 +239,7 @@ $("#reset-button").addEventListener("click", () => {
 window.addEventListener("pagehide", () => { $("#encryption-key").value = ""; $("#envelope").value = ""; $("#encryption-results").replaceChildren(); });
 navigate();
 inspectURL();
-fetch("/api/health", {credentials:"omit", cache:"no-store", redirect:"error"})
+fetch("/api/health", {credentials:"same-origin", cache:"no-store", redirect:"error"})
   .then(response => response.ok ? response.json() : null)
   .then(data => {
     if (data?.mode === "codespaces") {
