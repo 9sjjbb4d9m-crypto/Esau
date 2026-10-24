@@ -59,3 +59,12 @@ Set `CHROMIUM_PATH` to your Chromium executable as needed. The suite launches it
 - `server.mjs`: local static server and optional AI proxy.
 - `test/`: dependency-free unit/integration tests.
 - `qa/browser.mjs`: optional browser regression suite.
+
+
+## Publish on GitHub Pages
+
+The repository includes a GitHub Actions workflow for Pages. It publishes the static app from `public/` whenever changes are pushed to `main`. In the repository settings, open **Pages** and set **Build and deployment → Source** to **GitHub Actions**. After the workflow finishes, open the Pages URL shown there.
+
+The static Pages version includes vocabulary, flashcards, reviews, quizzes, progress tracking, browser speech features, and built-in exercises. The optional AI exercise endpoint requires the Node server and an `OPENAI_API_KEY`; GitHub Pages serves static files and cannot run that endpoint. Keep the key out of the repository.
+
+For local development, `npm start` runs the app and its optional AI endpoint at `http://localhost:3000`.

@@ -45,7 +45,7 @@ document.addEventListener('click',async e=>{
  if(action==='record')practice();
  if(action==='next-speak'){if(recognizer){recognizer.abort();recognizer=null;}speakIndex++;speak();}
  if(action==='builtin'){const candidates=builtIn.filter(x=>x.prompt!==exercise?.prompt);exercise={...candidates[Math.floor(Math.random()*candidates.length)],source:'BUILT-IN'};exerciseAnswered=false;renderExercise();}
- if(action==='generate'&&!busy&&ai){busy=true;exercises();try{const response=await fetch('/api/exercise',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deck}),signal:AbortSignal.timeout(25000)}),data=await response.json();if(!response.ok)throw Error(data.error);exercise={...validateExercise(data),source:'AI GENERATED'};exerciseAnswered=false;}catch(err){toast(err.name==='TimeoutError'?'Generation timed out. Try a built-in exercise.':err.message);}finally{busy=false;if(page==='exercises')exercises();}}
+ if(action==='generate'&&!busy&&ai){busy=true;exercises();try{const response=await fetch('./api/exercise',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deck}),signal:AbortSignal.timeout(25000)}),data=await response.json();if(!response.ok)throw Error(data.error);exercise={...validateExercise(data),source:'AI GENERATED'};exerciseAnswered=false;}catch(err){toast(err.name==='TimeoutError'?'Generation timed out. Try a built-in exercise.':err.message);}finally{busy=false;if(page==='exercises')exercises();}}
  if(button.dataset.exAnswer!==undefined&&exercise&&!exerciseAnswered){exerciseAnswered=true;const index=Number(button.dataset.exAnswer),correct=index===exercise.answer;record('exercise',correct);exerciseChoice=index;paintExerciseAnswer();}
  if(action==='export'){const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`zoalmon-progress-${dayKey()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 });
@@ -55,5 +55,5 @@ document.addEventListener('change',async e=>{
  if(e.target.id==='import'){const f=e.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('Backup is too large.');const raw=await f.text(),data=JSON.parse(raw);if(data.version!==1||!data.cards||!Array.isArray(data.events))throw Error('Please choose a valid zoalmon backup.');state=loadState(raw);save();card=null;render();toast('Your progress has been restored.');}catch(err){toast(err.message||'Could not import that backup.');}}
 });
 window.addEventListener('hashchange',()=>{const next=location.hash.slice(1);if(next!==page)go(next);});
-fetch('/api/config').then(r=>r.json()).then(c=>{ai=c.aiEnabled===true;if(page==='exercises'||page==='settings')render();}).catch(()=>{});
+fetch('./api/config').then(r=>r.json()).then(c=>{ai=c.aiEnabled===true;if(page==='exercises'||page==='settings')render();}).catch(()=>{});
 page=titles[location.hash.slice(1)]?location.hash.slice(1):'home';render();
