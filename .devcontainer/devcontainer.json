@@ -1,0 +1,29 @@
+{
+  "name": "Loopback Lab",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+  "forwardPorts": [
+    8765
+  ],
+  "portsAttributes": {
+    "8765": {
+      "label": "Loopback Lab \u2014 keep Private",
+      "protocol": "http",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "python -m venv .venv && .venv/bin/python -m pip install -r requirements-dev.txt && .venv/bin/python -m unittest discover -s tests -v",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "remote.portsAttributes": {
+          "8765": {
+            "label": "Loopback Lab \u2014 keep Private",
+            "onAutoForward": "notify"
+          }
+        }
+      }
+    }
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/loopback-lab"
+}

@@ -1,3 +1,21 @@
+# Loopback cybersecurity lab — Codespaces branch
+
+This branch adds the Python cybersecurity lab in [`loopback-lab/`](loopback-lab/README.md). The existing French-learning app is preserved below.
+
+**[Create a new Codespace for this branch](https://github.com/codespaces/new?hide_repo_select=true&ref=loopback-lab-codespaces&repo=1431950864)**
+
+Container setup installs the lab dependencies and runs 34 tests. Once setup finishes, the editor opens the lab folder. Run:
+
+```sh
+.venv/bin/python -m lab --codespaces
+```
+
+In the **Ports** panel, keep port **8765 Private** and open it in your browser. You can also run the **Start Loopback Lab in Codespaces** task. Stop the Codespace from GitHub when finished.
+
+The runtime is hosted by GitHub in this mode. The lab performs no URL fetching, DNS lookups, third-party scanning, or live packet capture. Standard local execution remains supported. See the [lab setup and exercises](loopback-lab/README.md) and [verification report](loopback-lab/VERIFICATION.md).
+
+---
+
 # Parlons
 
 A working, local French-learning MVP. Vanilla HTML/CSS/JavaScript and a dependency-free Node.js server. Requires Node.js 20 or later. No build step, account, database, or API key required for the core app.

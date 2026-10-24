@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loopback-learning-lab"
+version = "1.0.0"
+description = "A local-only cybersecurity learning lab"
+requires-python = ">=3.11"
+dependencies = ["fastapi==0.141.1", "uvicorn==0.52.1", "cryptography==50.0.0"]
+
+[project.scripts]
+loopback-lab = "lab.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["lab*"]
+
+[tool.setuptools.package-data]
+lab = ["static/*"]
