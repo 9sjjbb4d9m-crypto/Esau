@@ -68,3 +68,8 @@ The repository includes a GitHub Actions workflow for Pages. It publishes the st
 The static Pages version includes vocabulary, flashcards, reviews, quizzes, progress tracking, browser speech features, and built-in exercises. The optional AI exercise endpoint requires the Node server and an `OPENAI_API_KEY`; GitHub Pages serves static files and cannot run that endpoint. Keep the key out of the repository.
 
 For local development, `npm start` runs the app and its optional AI endpoint at `http://localhost:3000`.
+
+
+## English for Spanish speakers (A2+)
+
+Open `/english/` in the local app or at the published Pages site for a separate English-learning experience. It includes 32 A2+ words and phrases, Spanish instructions and meanings, English example sentences, spaced-repetition flashcards, quizzes, progress tracking, and English pronunciation practice where the browser supports speech. Its progress is stored separately in the browser. The static GitHub Pages version includes this experience too.
