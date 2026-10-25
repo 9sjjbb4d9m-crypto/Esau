@@ -21,7 +21,7 @@ export function createServer({apiKey=process.env.OPENAI_API_KEY,fetcher=fetch}={
  }
  if(req.method!=='GET'&&req.method!=='HEAD')return send(405,{error:'Method not allowed.'});
  const name=decodeURIComponent(url.pathname),target=resolve(root,'.'+(name==='/'?'/index.html':name));if(!target.startsWith(root))return send(403,{error:'Forbidden.'});
- const path=name!=='/'&&name.endsWith('/')?resolve(target,'index.html'):target;const file=await readFile(path);res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript'})[extname(path)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:file);
+ const path=name!=='/'&&name.endsWith('/')?resolve(target,'index.html'):target;const file=await readFile(path);res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml'})[extname(path)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:file);
  }catch(e){send(e.code==='ENOENT'?404:502,{error:e.code==='ENOENT'?'Not found.':'Request failed. Please try again.'});}
 });}
 if(process.argv[1]===fileURLToPath(import.meta.url)){const port=Number(process.env.PORT)||3000;createServer().listen(port,'127.0.0.1',()=>console.log(`zoalmon is ready at http://localhost:${port}`));}
