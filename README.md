@@ -72,4 +72,4 @@ For local development, `npm start` runs the app and its optional AI endpoint at 
 
 ## English for Spanish speakers (A2+)
 
-Open `/english/` in the local app or at the published Pages site for a separate English-learning experience. It includes 32 A2+ words and phrases, Spanish instructions and meanings, English example sentences, spaced-repetition flashcards, quizzes, progress tracking, and English pronunciation practice where the browser supports speech. Its progress is stored separately in the browser. The static GitHub Pages version includes this experience too.
+Open `/english/` in the local app or at the published Pages site for a separate English-learning experience. It includes 32 A2+ words and phrases, Spanish instructions and meanings, English example sentences, spaced-repetition flashcards, quizzes, progress tracking, English pronunciation practice where the browser supports speech, five Spanish-language grammar lessons, and contextual sentence-completion exercises with translations and explanations. Its progress is stored separately in the browser. The static GitHub Pages version includes this experience too.
