@@ -2,9 +2,9 @@ import {topics,exercises} from './grammar.js';
 let tab='theory',index=0,choice=-1;
 export function grammarView(head,esc){
  let html=head('GRAMÁTICA A2+','Entiende el inglés. Úsalo.','Teoría clara en español y práctica con frases completas en contexto.');
- html+=`<div class="grammar-tabs"><button data-grammar-tab="theory" class="${tab==='theory'?'active':''}">Teoría y ejemplos</button><button data-grammar-tab="practice" class="${tab==='practice'?'active':''}">Ejercicios completos</button></div><div id="grammar-panel">`;
+ html+=`<div class="grammar-tabs" role="group" aria-label="Secciones de gramática"><button data-grammar-tab="theory" class="${tab==='theory'?'active':''}">Teoría y ejemplos</button><button data-grammar-tab="practice" class="${tab==='practice'?'active':''}">Ejercicios completos</button></div><div id="grammar-panel">`;
  if(tab==='theory'){
-  html+=`<div class="theory-grid">${topics.map(t=>`<article class="theory-card"><span class="level">A2+</span><h2>${t.title}</h2><p>${t.intro}</p><div class="formula"><b>Estructura</b><br>${t.rule}</div>${t.examples.map(([en,es])=>`<div class="example-line"><span lang="en">${esc(en)}</span><small lang="es">${esc(es)}</small></div>`).join('')}<div class="theory-note">${t.tip}</div></article>`).join('')}</div><p><button class="primary" data-grammar-tab="practice">Practicar con frases completas →</button></p>`;
+  html+=`<div class="theory-grid">${topics.map(t=>`<article class="theory-card"><h2>${t.title}</h2><p>${t.intro}</p><div class="formula"><b>Estructura</b><br>${t.rule}</div>${t.examples.map(([en,es])=>`<div class="example-line"><span lang="en">${esc(en)}</span><small lang="es">${esc(es)}</small></div>`).join('')}<div class="theory-note">${t.tip}</div></article>`).join('')}</div><p><button class="primary" data-grammar-tab="practice">Practicar con frases completas →</button></p>`;
  }else if(index>=exercises.length){
   html+=`<div class="panel empty"><h2>¡Terminaste las frases!</h2><p class="sub">Has practicado gramática A2+ en contexto.</p><button class="primary" data-grammar-restart>Repetir ejercicios →</button></div>`;
  }else{
