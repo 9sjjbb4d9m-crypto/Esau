@@ -77,3 +77,9 @@ Open `/english/` in the local app or at the published Pages site for a separate 
 ## French A1 grammar in Spanish
 
 Open `/#grammar` for 18 beginner French lessons, each with a Spanish explanation, a reference structure, translated examples and a contextual exercise. Topics cover pronouns, être and avoir, articles, gender and plural, the present tense, essential irregular verbs, negation, questions, adjectives, possessives and demonstratives, prepositions, quantities, existence, numbers and time, reflexives, near future and a first introduction to passé composé. The reader remembers the selected lesson and exercise attempts on the device; answers also count as practice activities. The lessons render one at a time in the existing light/dark themes.
+
+## Adaptive English / French placement
+
+Open /placement/ for server-scored adaptive assessment spanning estimated A1–C2. Grammar, vocabulary and reading are assessed independently; listening, writing and speaking are excluded and clearly labelled. Sessions resume, language histories are separate, results include uncertainty and recommendations, and homepages show the latest result.
+
+Run npm start for the complete local experience. GitHub Pages requires a separate HTTPS Node API; the assessment screen includes a connection setting. See [assessment/README.md](assessment/README.md) for deployment, persistent storage, scoring and limitations. This is an editorial starter assessment, not a CEFR certification.

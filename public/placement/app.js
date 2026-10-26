@@ -1,0 +1,44 @@
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const levels=['A1','A2','B1','B2','C1','C2'],names={grammar:'Gramática',vocabulary:'Vocabulario',reading:'Lectura'};
+let language=new URLSearchParams(location.search).get('lang')==='fr'?'fr':'en',session=null,started=Date.now(),busy=false;
+function read(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+let base=read('zoalmon-placement-api','');
+const key=()=>base+'-'+language;
+async function api(path='',body){
+ const r=await fetch(base+'/api/placement'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(15000)});
+ let data;try{data=await r.json()}catch{throw Error('Este alojamiento no ejecuta el servidor de evaluación. Conecta una API Node o abre la app con npm start.')}
+ if(!r.ok)throw Error(data.error||'No se pudo conectar con el servidor.');return data;
+}
+function welcome(error=''){
+ if(!base&&location.hostname.endsWith('.github.io')&&!error)error='Esta versión de GitHub Pages necesita conectar un servidor Node. Abre «Conexión del servidor» abajo; la evaluación completa funciona con npm start.';
+ const history=read('zoalmon-placement-history-'+key(),[]),resume=read('zoalmon-placement-session-'+key(),null);
+ $('#app').innerHTML=`<p class="crumb">EVALUACIÓN ADAPTATIVA</p><h1>Encuentra tu punto de partida.</h1><p>La dificultad se ajusta a tus respuestas y se equilibran tres habilidades. Contesta sin diccionario ni ayuda externa. No verás correcciones durante la prueba.</p><p>Entre 12 y 40 preguntas; normalmente 20–30. Puedes cerrar la página y retomar la sesión. Estimación CEFR orientativa, sin validación externa ni valor de certificación.</p><div class="panel"><label for="language">Idioma</label><select id="language"><option value="en" ${language==='en'?'selected':''}>Inglés</option><option value="fr" ${language==='fr'?'selected':''}>Francés</option></select><label for="expected">Nivel esperado (opcional, solo punto de partida)</label><select id="expected"><option value="">No lo sé · A2/B1</option>${levels.map(x=>`<option>${x}</option>`).join('')}</select><p><small>Se evalúan gramática, vocabulario y lectura. Audición, escritura y expresión oral no se evalúan: no hay audio auténtico ni corrector de escritura validado en esta versión.</small></p><button class="primary" id="start">Empezar prueba</button>${resume?'<button class="secondary" id="resume">Retomar sesión</button>':''}<p id="error" class="error" role="alert">${esc(error)}</p></div><details><summary>Conexión del servidor</summary><p>GitHub Pages necesita una API Node para proteger respuestas y guardar sesiones. Introduce la URL HTTPS de tu servidor; configura PLACEMENT_ORIGIN en él con el origen de esta página.</p><label for="api-url">Servidor API (vacío para este mismo sitio)</label><input id="api-url" type="url" placeholder="https://tu-servidor.example" value="${esc(base)}"><button class="secondary" id="connect">Guardar conexión</button></details><h2>Historial · ${language==='en'?'inglés':'francés'}</h2>${history.length?history.slice().reverse().map((x,i)=>`<div class="history">${new Date(x.result.completedAt).toLocaleString('es')} · ${x.result.level} estimado · ${x.result.count} preguntas <button class="secondary" data-history="${history.length-1-i}">Ver resultado</button></div>`).join(''):'<p>Aún no hay resultados en este dispositivo.</p>'}`;
+}
+function show(){
+ if(session.result){remember();return results(session.result)}
+ started=Date.now();const q=session.question;
+ $('#app').innerHTML=`<p class="crumb">PRUEBA DE ${language==='en'?'INGLÉS':'FRANCÉS'}</p><h1>Una pregunta cada vez.</h1><div class="progress"><span>Pregunta ${session.count+1} · máximo 40</span><span>${names[q.skill]}</span></div><div class="exercise-progress"><span style="width:${session.count/40*100}%"></span></div><form id="answer-form" class="panel">${q.passage?`<blockquote lang="${language}">${esc(q.passage)}</blockquote>`:''}<fieldset><legend lang="${language}">${esc(q.prompt)}</legend>${q.options?q.options.map((o,i)=>`<label class="answer"><input type="radio" name="answer" value="${i}" required><span lang="${language}">${esc(o)}</span></label>`).join(''):'<label for="written">Completa el hueco (una palabra)</label><input id="written" name="answer" required maxlength="300" autocomplete="off" spellcheck="false">'}</fieldset><button class="primary" type="submit">Enviar respuesta</button><p id="error" class="error" role="alert"></p></form><small>Se guarda cada respuesta. Puedes salir y volver para continuar. No se usa la velocidad para decidir tu nivel.</small>`;
+}
+function remember(){
+ const k='zoalmon-placement-history-'+key(),h=read(k,[]);if(!h.some(x=>x.id===session.id)){h.push(session);save(k,h);save('zoalmon-placement-latest-'+language,session.result)}
+ save('zoalmon-placement-session-'+key(),null);
+}
+function results(r){
+ $('#app').innerHTML=`<p class="crumb">RESULTADO ORIENTATIVO · ${language==='en'?'INGLÉS':'FRANCÉS'}</p><h1>${r.level} estimado</h1><div class="scale">${levels.map(x=>`<span class="${x===r.level?'selected':''}">${x}</span>`).join('')}</div><p>Intervalo orientativo: ${r.range.join('–')}. Confianza ${r.confidence}. ${r.provisional?'Resultado provisional: conviene ampliar la evaluación.':''}</p><p>${esc(r.reason)}</p><div class="panel">${Object.entries(r.bySkill).map(([skill,x])=>`<div class="result-row"><span>${names[skill]}</span><strong>${x.level} estimado · ${x.count} preguntas</strong></div>`).join('')}<p>Fortaleza relativa: ${names[r.strongest]}. Prioridad de práctica: ${names[r.weakest]}.</p><p><small>${new Date(r.completedAt).toLocaleString('es')} · ${r.count} preguntas. Sin evaluación de audición, escritura ni expresión oral.</small></p></div><h2>Tu siguiente actividad · ${r.level}</h2><p>Refuerza ${names[r.weakest].toLowerCase()}: ${r.weakest==='grammar'?'revisa las estructuras de cada oración y crea tus propios ejemplos.':r.weakest==='vocabulary'?'identifica palabras clave e infiere su significado por contexto.':'identifica la idea principal, las pruebas y los límites de la conclusión.'}</p><blockquote lang="${language}">${esc(r.practice.passage)}</blockquote><p>${esc(r.practice.task)}</p><p><a class="secondary" href="${language==='fr'?'../#grammar':'../english/#grammar'}">Repasar las bases de gramática</a></p><small>Puedes acceder libremente a lecciones más fáciles o difíciles. Las lecciones guiadas actuales cubren A1 de francés y A2+ de inglés; la lectura anterior se adapta a tu estimación.</small><p><button class="primary" id="retake">Nueva evaluación</button><button class="secondary" id="back">Idiomas e historial</button></p>`;
+}
+async function act(fn){
+ if(busy)return;busy=true;if($('#error'))$('#error').textContent='Procesando…';document.querySelectorAll('button').forEach(b=>b.disabled=true);
+ try{await fn()}catch(e){const target=$('#error');if(target)target.textContent=e.name==='TimeoutError'?'El servidor tardó demasiado. Tu sesión se conserva; intenta retomar.':e.message;else welcome(e.message)}
+ finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false)}
+}
+document.addEventListener('change',e=>{if(e.target.id==='language'){language=e.target.value;welcome()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.id==='start'||b.id==='retake')act(async()=>{const expected=$('#expected')?.value||undefined;const h=read('zoalmon-placement-history-'+key(),[]);session=await api('',{language,expected,previousIds:h.at(-1)?.answeredIds||[]});save('zoalmon-placement-session-'+key(),session.id);show()});
+ if(b.id==='resume')act(async()=>{session=await api('/'+read('zoalmon-placement-session-'+key(),''));show()});
+ if(b.id==='back')welcome();
+ if(b.dataset.history!==undefined)results(read('zoalmon-placement-history-'+key(),[])[Number(b.dataset.history)].result);
+ if(b.id==='connect'){const value=$('#api-url').value.trim().replace(/\/$/,'');try{if(value){const u=new URL(value);if(u.protocol!=='https:'&&!(u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname)))throw Error();if(u.pathname!=='/'||u.search||u.hash||u.username||u.password)throw Error()}base=value;save('zoalmon-placement-api',base);welcome()}catch{$('#error').textContent='Usa un origen HTTPS válido, sin ruta ni credenciales.'}}
+});
+document.addEventListener('submit',e=>{if(e.target.id!=='answer-form')return;e.preventDefault();const form=new FormData(e.target),raw=form.get('answer');if(raw===null||!String(raw).trim())return;act(async()=>{session=await api('/'+session.id+'/answer',{id:session.question.id,value:session.question.options?Number(raw):String(raw),elapsed:Date.now()-started});show()})});
+welcome();

@@ -1,13 +1,16 @@
+import {placementAPI} from './assessment/api.mjs';
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve,extname} from 'node:path';
 import {validateExercise,words} from './public/core.js';
+const assessment=placementAPI(process.env.PLACEMENT_DATA_FILE||fileURLToPath(new URL('./.data/placement.json',import.meta.url)));
 const root=fileURLToPath(new URL('./public/',import.meta.url));
 export function createServer({apiKey=process.env.OPENAI_API_KEY,fetcher=fetch}={}){return http.createServer(async(req,res)=>{
  const send=(code,data)=>{res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
  try{
  const url=new URL(req.url,'http://localhost');
+ if(url.pathname==='/api/placement'||url.pathname.startsWith('/api/placement/'))return await assessment(req,res,url);
  if(url.pathname==='/api/config')return send(200,{aiEnabled:!!apiKey});
  if(url.pathname==='/api/exercise'){
  if(req.method!=='POST')return send(405,{error:'Use POST.'});
@@ -24,4 +27,4 @@ export function createServer({apiKey=process.env.OPENAI_API_KEY,fetcher=fetch}={
  const path=name!=='/'&&name.endsWith('/')?resolve(target,'index.html'):target;const file=await readFile(path);res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml'})[extname(path)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:file);
  }catch(e){send(e.code==='ENOENT'?404:502,{error:e.code==='ENOENT'?'Not found.':'Request failed. Please try again.'});}
 });}
-if(process.argv[1]===fileURLToPath(import.meta.url)){const port=Number(process.env.PORT)||3000;createServer().listen(port,'127.0.0.1',()=>console.log(`zoalmon is ready at http://localhost:${port}`));}
+if(process.argv[1]===fileURLToPath(import.meta.url)){const port=Number(process.env.PORT)||3000;createServer().listen(port,process.env.HOST||'127.0.0.1',()=>console.log(`zoalmon is ready at http://localhost:${port}`));}
