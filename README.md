@@ -73,3 +73,7 @@ For local development, `npm start` runs the app and its optional AI endpoint at 
 ## English for Spanish speakers (A2+)
 
 Open `/english/` in the local app or at the published Pages site for a separate English-learning experience. It includes 32 A2+ words and phrases, Spanish instructions and meanings, English example sentences, spaced-repetition flashcards, quizzes, progress tracking, English pronunciation practice where the browser supports speech, five Spanish-language grammar lessons, and contextual sentence-completion exercises with translations and explanations. Its progress is stored separately in the browser. The static GitHub Pages version includes this experience too.
+
+## French A1 grammar in Spanish
+
+Open `/#grammar` for 18 beginner French lessons, each with a Spanish explanation, a reference structure, translated examples and a contextual exercise. Topics cover pronouns, être and avoir, articles, gender and plural, the present tense, essential irregular verbs, negation, questions, adjectives, possessives and demonstratives, prepositions, quantities, existence, numbers and time, reflexives, near future and a first introduction to passé composé. The reader remembers the selected lesson and exercise attempts on the device; answers also count as practice activities. The lessons render one at a time in the existing light/dark themes.
