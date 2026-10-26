@@ -13,7 +13,7 @@ const base='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 try{
  for(const width of [390,1440]){
-  const context=await browser.newContext({viewport:{width,height:900}});
+  const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
   const page=await context.newPage();page.setDefaultTimeout(5000);
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/placement/?lang=fr');await page.locator('#start').click();await page.locator('#answer-form').waitFor();
@@ -30,7 +30,7 @@ try{
   }
   await page.getByRole('heading',{name:/estimado/}).waitFor();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-  await page.goto(base+'/');await page.getByText(/Tu nivel estimado/).waitFor();
+  await page.goto(base+'/');await page.getByText(/TU NIVEL ESTIMADO/).waitFor();
   await page.goto(base+'/placement/?lang=en');assert.equal(await page.locator('.history').count(),0);
   assert.deepEqual(errors,[]);console.log(width+'px: resume, full adaptive test, results, homepage recommendation and separate language history passed');
   await context.close();

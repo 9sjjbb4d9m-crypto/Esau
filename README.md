@@ -83,3 +83,13 @@ Open `/#grammar` for 18 beginner French lessons, each with a Spanish explanation
 Open /placement/ for server-scored adaptive assessment spanning estimated A1–C2. Grammar, vocabulary and reading are assessed independently; listening, writing and speaking are excluded and clearly labelled. Sessions resume, language histories are separate, results include uncertainty and recommendations, and homepages show the latest result.
 
 Run npm start for the complete local experience. GitHub Pages requires a separate HTTPS Node API; the assessment screen includes a connection setting. See [assessment/README.md](assessment/README.md) for deployment, persistent storage, scoring and limitations. This is an editorial starter assessment, not a CEFR certification.
+
+## Smoked-glass homepages
+
+Both courses now open with a one-screen WebGL portal adapted to zoalmon's learning content. Three.js 0.169.0 and RoomEnvironment load through the jsDelivr import map; Inter is a variable WOFF2 font. There is no build step and all hero graphics and printed textures are drawn in code.
+
+The scene uses rounded extruded polygons, Physical glass materials, PMREM studio lighting, animated shared cut points, per-shard spring hover, global cursor tilt, a shader glow, and a projectively mapped selectable HTML layer. “Cómo funciona” sends the printed shards away; the return sliver reassembles them. The course links are real controls. Existing lessons, practice, dark/light preferences and assessment remain accessible.
+
+Reduced motion, unavailable WebGL and failed CDN loading use styled HTML. GPU resources, animation and resize listeners are disposed when leaving the homepage. Animation speed depends on the device; software rendering is slower. The learning pages retain the spacious reading layout.
+
+Run npm run test:glass with Playwright Core and Chromium as described for other browser checks. It verifies real WebGL hover/shatter/reassembly/navigation, cleanup, reduced-motion mobile controls and CDN failure. Existing browser and placement checks use the static reduced-motion portal for predictable navigation.
