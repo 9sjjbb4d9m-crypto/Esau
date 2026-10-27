@@ -80,9 +80,7 @@ Open `/#grammar` for 18 beginner French lessons, each with a Spanish explanation
 
 ## Adaptive English / French placement
 
-Open /placement/ for server-scored adaptive assessment spanning estimated A1–C2. Grammar, vocabulary and reading are assessed independently; listening, writing and speaking are excluded and clearly labelled. Sessions resume, language histories are separate, results include uncertainty and recommendations, and homepages show the latest result.
-
-Run npm start for the complete local experience. GitHub Pages requires a separate HTTPS Node API; the assessment screen includes a connection setting. See [assessment/README.md](assessment/README.md) for deployment, persistent storage, scoring and limitations. This is an editorial starter assessment, not a CEFR certification.
+Open /placement/ for a browser-only adaptive test covering grammar, vocabulary and reading. English and French sessions and results are stored separately on the device. After the result, choose any A1–C2 level and try three starter practice exercises. Listening, writing and speaking are excluded. The scoring is heuristic and uncalibrated; the client-side answer keys are visible, so this is not a secure examination or a CEFR certification. See assessment/README.md for details.
 
 ## Smoked-glass homepages
 
